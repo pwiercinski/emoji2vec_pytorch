@@ -1,4 +1,5 @@
 # emoji2vec_pytorch
 PyTorch implementation of "emoji2vec: Learning Emoji Representations from their Description"
 
-Work in progress 
+This is an exercise to get a better understanding of PyTorch and the methods described in the paper.
+Currently it's a work in progress.
