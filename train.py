@@ -89,7 +89,7 @@ def train_save_evaluate(params, kb, train_set, dev_set, ind2emoji, embeddings_ar
             'f1': f1,
             'auc': auc
         }
-    print(model.auc(dsets['dev']))
+        
     return results['dev']
 
 
