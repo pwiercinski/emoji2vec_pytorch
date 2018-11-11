@@ -29,8 +29,8 @@ class CliParser:
                                  help='file for generated embeddings')
 
         # Model parameters
-        self.parser.add_argument('-k', '--dim', default=3000, type=int, help='train a 300 x k projection matrix')
-        self.parser.add_argument('-b', '--batch', default=128, type=int,
+        self.parser.add_argument('-k', '--dim', default=300, type=int, help='train a 300 x k projection matrix')
+        self.parser.add_argument('-b', '--batch', default=64, type=int,
                                  help='positive examples in minibatch (total size=batch*(1+ratio)')
         self.parser.add_argument('-e', '--epochs', default=20, type=int, help='number of training epochs')
         self.parser.add_argument('-r', '--ratio', default=1, type=int, help='ratio of negative examples to positive')

@@ -61,7 +61,7 @@ def train_save_evaluate(params, kb, train_set, dev_set, ind2emoji, embeddings_ar
 
         model = Emoji2Vec(model_params=params, num_emojis=kb.dim_size(0), embeddings_array=embeddings_array)
         model.train(kb=kb, epochs=params.max_epochs, learning_rate=params.learning_rate)
-        os.mkdir(model_folder)
+        os.makedirs(model_folder)
         torch.save(model.nn, model_folder + '/model.pt')
         e2v = model.create_gensim_files(model_folder=model_folder, ind2emoj=ind2emoji, out_dim=params.out_dim)
         if params.in_dim != params.out_dim:
