@@ -21,7 +21,7 @@ class CliParser:
         # Directories/files
         self.parser.add_argument('-d', '--dir', default='./data/training/', type=str,
                                  help='directory for training data')
-        self.parser.add_argument('-w', '--word', default='./data/word2vec/GoogleNews-vectors-negative300.bin',
+        self.parser.add_argument('-w', '--word', default='./data/word2vec/GoogleNews-vectors-negative300.bin.gz',
                                  type=str, help='path to the word2vec file')
         self.parser.add_argument('-m', '--mapping', default='emoji_mapping.p', type=str,
                                  help='emoji index mapping file')
