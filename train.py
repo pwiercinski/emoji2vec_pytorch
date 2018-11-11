@@ -64,6 +64,8 @@ def train_save_evaluate(params, kb, train_set, dev_set, ind2emoji, embeddings_ar
         os.mkdir(model_folder)
         torch.save(model.nn, model_folder + '/model.pt')
         e2v = model.create_gensim_files(model_folder=model_folder, ind2emoj=ind2emoji, out_dim=params.out_dim)
+        if params.in_dim != params.out_dim:
+            embeddings_array = model.nn.project_embeddings(embeddings_array)
         for dset_name in dsets:
             _, pred_values, _, true_values = generate_predictions(e2v=e2v, dset=dsets[dset_name],
                                                                   phr_embeddings=embeddings_array,
@@ -89,7 +91,7 @@ def train_save_evaluate(params, kb, train_set, dev_set, ind2emoji, embeddings_ar
             'f1': f1,
             'auc': auc
         }
-        
+
     return results['dev']
 
 

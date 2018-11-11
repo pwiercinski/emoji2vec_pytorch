@@ -21,7 +21,7 @@ class CliParser:
         # Directories/files
         self.parser.add_argument('-d', '--dir', default='./data/training/', type=str,
                                  help='directory for training data')
-        self.parser.add_argument('-w', '--word', default='./data/word2vec/GoogleNews-vectors-negative300.bin.gz',
+        self.parser.add_argument('-w', '--word', default='./data/word2vec/GoogleNews-vectors-negative300.bin',
                                  type=str, help='path to the word2vec file')
         self.parser.add_argument('-m', '--mapping', default='emoji_mapping.p', type=str,
                                  help='emoji index mapping file')
@@ -29,10 +29,10 @@ class CliParser:
                                  help='file for generated embeddings')
 
         # Model parameters
-        self.parser.add_argument('-k', '--dim', default=300, type=int, help='train a 300 x k projection matrix')
-        self.parser.add_argument('-b', '--batch', default=4, type=int,
+        self.parser.add_argument('-k', '--dim', default=3000, type=int, help='train a 300 x k projection matrix')
+        self.parser.add_argument('-b', '--batch', default=128, type=int,
                                  help='positive examples in minibatch (total size=batch*(1+ratio)')
-        self.parser.add_argument('-e', '--epochs', default=40, type=int, help='number of training epochs')
+        self.parser.add_argument('-e', '--epochs', default=20, type=int, help='number of training epochs')
         self.parser.add_argument('-r', '--ratio', default=1, type=int, help='ratio of negative examples to positive')
         self.parser.add_argument('-l', '--learning', default=0.001, type=float, help='learning rate')
         self.parser.add_argument('-dr', '--dropout', default=0.1, type=float, help='amount of dropout to use')

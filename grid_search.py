@@ -116,7 +116,7 @@ def __run_grid_search():
     kb, ind2phr, ind2emoji = build_kb(args.data_folder)
     pk.dump(ind2emoji, open(args.mapping_file, 'wb'))
     embeddings_array = generate_embeddings(ind2phr=ind2phr, kb=kb, embeddings_file=args.embeddings_file,
-                                                 word2vec_file=args.word2vec_file)
+                                            word2vec_file=args.word2vec_file)
 
     # Perform grid search
     print('performing grid search')
