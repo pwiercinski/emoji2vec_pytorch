@@ -1,5 +1,5 @@
 # emoji2vec_pytorch
-PyTorch implementation of "emoji2vec: Learning Emoji Representations from their Description" (https://arxiv.org/pdf/1609.08359.pdf)
+PyTorch implementation of "emoji2vec: Learning Emoji Representations from their Description" (https://arxiv.org/pdf/1609.08359.pdf) by Ben Eisner, Tim Rocktäschel, Isabelle Augenstein, Matko Bošnjak, and Sebastian Riedel.
 
 Original tensorflow implementation by UCLMR Group: https://github.com/uclmr/emoji2vec
 
