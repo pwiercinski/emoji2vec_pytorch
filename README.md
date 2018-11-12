@@ -166,4 +166,4 @@ functions unless they are running them on a new set of Tweets
 and generally need not be used externally.
 
 ## Contact
-Contact me at 'p.wierc \[at\] gmail.com' with questions about this implementation.
+Contact me at `p.wierc \[at\] gmail.com` with questions about this implementation.
