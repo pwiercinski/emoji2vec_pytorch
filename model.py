@@ -88,7 +88,6 @@ class Emoji2Vec:
 		"""Generate predictions on a given set of examples using TensorFlow
 
 		Args:
-			session: TensorFlow session
 			dset: Dataset tuple (emoji_ix, phrase_ix, truth)
 			threshold: Threshold for classification
 
