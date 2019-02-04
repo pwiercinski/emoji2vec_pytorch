@@ -18,7 +18,9 @@ __author__ = "Ben Eisner, Tim Rocktaschel"
 __email__ = "beisner@princeton.edu"
 
 
-def generate_embeddings(ind2phr, kb, embeddings_file, word2vec_file, word2vec_dim=300):
+def generate_embeddings(
+    ind2phr, kb, embeddings_file, word2vec_file, word2vec_dim=300
+):
     """Generate a numpy array of phrase embeddings for all phrases in the knowledge base.
 
         Since it is expensive to calculate these phrase embeddings every time, we cache the output
@@ -38,17 +40,19 @@ def generate_embeddings(ind2phr, kb, embeddings_file, word2vec_file, word2vec_di
 
     # get the complete word vectors from the second argument
     if not (os.path.isfile(embeddings_file)):
-        print('reading embedding data from: ' + word2vec_file)
-        phrase_vec_model = Phrase2Vec.from_word2vec_paths(word2vec_dim, w2v_path=word2vec_file)
+        print("reading embedding data from: " + word2vec_file)
+        phrase_vec_model = Phrase2Vec.from_word2vec_paths(
+            word2vec_dim, w2v_path=word2vec_file
+        )
 
-        print('generating vector subset')
+        print("generating vector subset")
         for phrase in kb.get_vocab(1):
             phrase_vector_sums[phrase] = phrase_vec_model[phrase]
 
-        pk.dump(phrase_vector_sums, open(embeddings_file, 'wb'))
+        pk.dump(phrase_vector_sums, open(embeddings_file, "wb"))
     else:
-        print('loading embeddings...')
-        phrase_vector_sums = pk.load(open(embeddings_file, 'rb'))
+        print("loading embeddings...")
+        phrase_vector_sums = pk.load(open(embeddings_file, "rb"))
 
     # build the embeddings array, for lookup later
     embeddings_array = np.zeros(shape=[len(ind2phr), 300], dtype=np.float32)
@@ -60,12 +64,12 @@ def generate_embeddings(ind2phr, kb, embeddings_file, word2vec_file, word2vec_di
 
 # Read data from a file and inject it into a knowledge base
 def __read_data(filename, base, ind_to_phr, ind_to_emoj, typ):
-    with open(filename, 'r', encoding="utf8") as f:
+    with open(filename, "r", encoding="utf8") as f:
         # build the data line by line
         lines = f.readlines()
         for line in lines:
-            ph, em, truth = line.rstrip().split('\t')
-            base.add((truth == 'True'), typ, em, ph)
+            ph, em, truth = line.rstrip().split("\t")
+            base.add((truth == "True"), typ, em, ph)
             ind_to_phr[base.get_id(ph, 1)] = ph
             ind_to_emoj[base.get_id(em, 0)] = em
 
@@ -85,14 +89,18 @@ def build_kb(data_folder):
     # KB indices to emoji
     ind_to_emoj = dict()
 
-    __read_data(data_folder + '/train.txt', base, ind_to_phr, ind_to_emoj, 'train')
-    __read_data(data_folder + '/dev.txt', base, ind_to_phr, ind_to_emoj, 'dev')
-    __read_data(data_folder + '/test.txt', base, ind_to_phr, ind_to_emoj, 'test')
+    __read_data(
+        data_folder + "/train.txt", base, ind_to_phr, ind_to_emoj, "train"
+    )
+    __read_data(data_folder + "/dev.txt", base, ind_to_phr, ind_to_emoj, "dev")
+    __read_data(
+        data_folder + "/test.txt", base, ind_to_phr, ind_to_emoj, "test"
+    )
 
     return base, ind_to_phr, ind_to_emoj
 
 
-def get_examples_from_kb(kb, example_type='train'):
+def get_examples_from_kb(kb, example_type="train"):
     """Extract all the examples of a type (i.e. train, dev, test) from the knowledge base
 
     Args:
@@ -148,9 +156,15 @@ def generate_predictions(e2v, dset, phr_embeddings, ind2emoji, threshold):
 
     for (phr_ix, em_ix, truth) in zip(phr_ixs, em_ixs, truths):
         prob = __sigmoid(
-            np.dot(matutils.unitvec(phr_embeddings[phr_ix]), matutils.unitvec(e2v[ind2emoji[em_ix]])))
+            np.dot(
+                matutils.unitvec(phr_embeddings[phr_ix]),
+                matutils.unitvec(e2v[ind2emoji[em_ix]]),
+            )
+        )
         y_pred_values.append(prob)
-        y_pred_labels.append(prob >= threshold)  # Threshold predicted probability
+        y_pred_labels.append(
+            prob >= threshold
+        )  # Threshold predicted probability
 
     y_true_values = [float(v) for v in truths]
 
@@ -176,6 +190,6 @@ def get_metrics(pred_labels, pred_values, truth_labels, truth_values):
     try:
         auc = metrics.roc_auc_score(y_true=truth_values, y_score=pred_values)
     except:
-        auc = 'N/A'
+        auc = "N/A"
 
     return acc, f1, auc

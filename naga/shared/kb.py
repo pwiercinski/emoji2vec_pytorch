@@ -78,7 +78,7 @@ class KB:
      """
 
     def __init__(self):
-        #random.seed(0)
+        # random.seed(0)
         # holds all known facts for every arity
         self.__facts = {}
         # holds all facts independent of arity
@@ -172,10 +172,12 @@ class KB:
         return (keys, truth, typ) in self.get_all_facts()
 
     def contains_fact_any_type(self, truth, *keys):
-        return self.contains_fact(truth, TRAIN_LABEL, *keys) or \
-               self.contains_fact(truth, DEV_LABEL, *keys) or \
-               self.contains_fact(truth, TEST_LABEL, *keys) or \
-               self.contains_fact(truth, TMP_LABEL, *keys)
+        return (
+            self.contains_fact(truth, TRAIN_LABEL, *keys)
+            or self.contains_fact(truth, DEV_LABEL, *keys)
+            or self.contains_fact(truth, TEST_LABEL, *keys)
+            or self.contains_fact(truth, TMP_LABEL, *keys)
+        )
 
     def add_train(self, *keys):
         self.add(True, TRAIN_LABEL, *keys)
@@ -214,11 +216,16 @@ class KB:
         cell = tuple(cell)
 
         if tries == 0:
-            print("Warning, couldn't sample negative fact for",
-                  key, "in dim", dim)
+            print(
+                "Warning, couldn't sample negative fact for",
+                key,
+                "in dim",
+                dim,
+            )
             return cell, False, TRAIN_LABEL
-        elif (cell, True, TRAIN_LABEL) in self.__facts[arity] or \
-                (oracle and self.contains_fact_any_type(True, *cell)):
+        elif (cell, True, TRAIN_LABEL) in self.__facts[arity] or (
+            oracle and self.contains_fact_any_type(True, *cell)
+        ):
             return self.sample_neg(key, dim, arity, oracle, tries - 1)
         else:
             return cell, False, TRAIN_LABEL
@@ -315,21 +322,26 @@ class KB:
                         if arity == 2:
                             result.append(([[lhs, "X", "Y"]], [rhs, "X", "Y"]))
                         else:
-                            #todo
+                            # todo
                             pass
             elif label == "impl_conj":
                 for arity in formulae:
                     for (lhs1, lhs2, rhs) in formulae[arity]:
                         if arity == 2:
-                            result.append(([[lhs1, "X", "Y"], [lhs2, "X", "Y"]],
-                                           [rhs, "X", "Y"]))
+                            result.append(
+                                (
+                                    [[lhs1, "X", "Y"], [lhs2, "X", "Y"]],
+                                    [rhs, "X", "Y"],
+                                )
+                            )
                         else:
-                            #todo
+                            # todo
                             pass
             elif label == "trans":
                 for (lhs1, lhs2, rhs) in formulae:
-                    result.append(([[lhs1, "X", "Y"], [lhs2, "Y", "Z"]],
-                                   [rhs, "X", "Z"]))
+                    result.append(
+                        ([[lhs1, "X", "Y"], [lhs2, "Y", "Z"]], [rhs, "X", "Z"])
+                    )
         return result
 
     def get_formulae_strings(self):
@@ -370,7 +382,9 @@ class KB:
     def add_tmp_inferred_fact(self, facts, head, arg_fun):
         done = True
         for ((rel, args), target, typ) in facts:
-            contained = self.contains_fact_any_type(target, head, arg_fun(args))
+            contained = self.contains_fact_any_type(
+                target, head, arg_fun(args)
+            )
             if target and not contained:
                 self.add(True, TMP_LABEL, head, arg_fun(args))
                 done = False
@@ -389,27 +403,37 @@ class KB:
                 if arity in self.get_formulae("impl"):
                     for (body, head) in self.get_formulae("impl")[arity]:
                         facts = self.get_facts(body, 0)
-                        done = self.add_tmp_inferred_fact(facts, head,
-                                                          self.id_args)
+                        done = self.add_tmp_inferred_fact(
+                            facts, head, self.id_args
+                        )
 
                 if arity in self.get_formulae("impl_conj"):
-                    for (body1, body2, head) in \
-                            self.get_formulae("impl_conj")[arity]:
+                    for (body1, body2, head) in self.get_formulae("impl_conj")[
+                        arity
+                    ]:
                         facts1 = self.get_facts(body1, 0)
                         facts2 = self.get_facts(body2, 0)
-                        facts = [x for x in facts1 for y in facts2
-                                 if x[0][1] == y[0][1] and
-                                 x[1] == y[1] and x[2] == y[2]]
-                        done = self.add_tmp_inferred_fact(facts, head,
-                                                          self.id_args)
+                        facts = [
+                            x
+                            for x in facts1
+                            for y in facts2
+                            if x[0][1] == y[0][1]
+                            and x[1] == y[1]
+                            and x[2] == y[2]
+                        ]
+                        done = self.add_tmp_inferred_fact(
+                            facts, head, self.id_args
+                        )
 
             for (body1, body2, head) in self.get_formulae("trans"):
                 facts1 = self.get_facts(body1, 0)
                 facts2 = self.get_facts(body2, 0)
-                facts = [((head, (e1, e4)), typ1, target1) for
-                         ((rel1, (e1, e2)), typ1, target1) in facts1 for
-                         ((rel2, (e3, e4)), typ2, target2) in facts2
-                         if e2 == e3 and typ1 == typ2 and target1 == target2]
+                facts = [
+                    ((head, (e1, e4)), typ1, target1)
+                    for ((rel1, (e1, e2)), typ1, target1) in facts1
+                    for ((rel2, (e3, e4)), typ2, target2) in facts2
+                    if e2 == e3 and typ1 == typ2 and target1 == target2
+                ]
                 done = self.add_tmp_inferred_fact(facts, head, self.id_args)
 
         # print(self.to_data_frame())
@@ -419,8 +443,9 @@ class KB:
         # to make sure we sample the same test facts when given a random seed
         rels.sort()
         for rel in rels:
-            facts = [fact for fact in self.get_facts(rel, 0)
-                     if fact[2] == TMP_LABEL]
+            facts = [
+                fact for fact in self.get_facts(rel, 0) if fact[2] == TMP_LABEL
+            ]
             for (key, truth, typ) in facts:
                 self.__remove_from_facts((key, truth, typ))
                 new_typ = TRAIN_LABEL
@@ -430,11 +455,14 @@ class KB:
 
         # sample unobserved facts as negative test facts
         for rel in self.get_symbols(0):
-            test_facts = [fact for fact in self.get_facts(rel, 0)
-                          if fact[2] == TEST_LABEL]
-            #print(rel, test_facts)
+            test_facts = [
+                fact
+                for fact in self.get_facts(rel, 0)
+                if fact[2] == TEST_LABEL
+            ]
+            # print(rel, test_facts)
             for test_fact in test_facts:
-                #print(test_fact)
+                # print(test_fact)
                 for i in range(0, sampled_unobserved_per_true):
                     (key, truth, typ) = self.sample_neg(rel, 0, 1, oracle=True)
                     self.add(False, TEST_LABEL, *key)
@@ -508,7 +536,10 @@ class Seq2Fact2SeqBatchSampler:
     def __init__(self, kb, arity, batch_size):
         self.kb = kb
         self.batch_size = batch_size
-        self.facts = filter(lambda x: not x[0][0][0].startswith("REL$"), list(self.kb.get_all_facts_of_arity(arity)))
+        self.facts = filter(
+            lambda x: not x[0][0][0].startswith("REL$"),
+            list(self.kb.get_all_facts_of_arity(arity)),
+        )
         self.todo_facts = list(self.facts)
         self.num_facts = len(self.facts)
         self.__reset()
@@ -533,9 +564,9 @@ class Seq2Fact2SeqBatchSampler:
     def get_batch(self):
         if self.count >= self.num_facts:
             self.__reset()
-        pos = self.todo_facts[0:self.batch_size]
+        pos = self.todo_facts[0 : self.batch_size]
         self.count += self.batch_size
-        self.todo_facts = self.todo_facts[self.batch_size::]
+        self.todo_facts = self.todo_facts[self.batch_size : :]
         return self.__tensorize(pos)
 
     # @profile

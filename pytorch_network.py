@@ -5,11 +5,15 @@ from torch import nn
 class Net(nn.Module):
     def __init__(self, input_size, output_size, num_emojis, dropout):
         super().__init__()
-        self.V = torch.nn.Parameter(torch.empty(num_emojis, output_size).uniform_(-0.1, 0.1))
+        self.V = torch.nn.Parameter(
+            torch.empty(num_emojis, output_size).uniform_(-0.1, 0.1)
+        )
         self.dropout = torch.nn.Dropout(p=dropout)
         if not input_size == output_size:
             self.is_proj = True
-            self.W = torch.nn.Parameter(torch.empty(input_size, output_size).uniform_(-0.1, 0.1))
+            self.W = torch.nn.Parameter(
+                torch.empty(input_size, output_size).uniform_(-0.1, 0.1)
+            )
             self.tanh = torch.nn.Tanh()
         else:
             self.is_proj = False
@@ -26,4 +30,8 @@ class Net(nn.Module):
         return x
 
     def project_embeddings(self, embeddings_array):
-        return self.tanh(torch.mm(torch.Tensor(embeddings_array), self.W)).detach().numpy()
+        return (
+            self.tanh(torch.mm(torch.Tensor(embeddings_array), self.W))
+            .detach()
+            .numpy()
+        )
