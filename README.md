@@ -3,7 +3,7 @@ PyTorch implementation of [emoji2vec: Learning Emoji Representations from their 
 
 ## Note
 This repo constitutes an exercise aiming to develop a better understanding of PyTorch and the methods described in the paper. The work presented here bases heavily on the original implementation. In fact one of the goals of this exercise was to translate the neural part of the original repo to PyTorch while maintaining its higher level functionality. <br> 
-Consequently a **significant proportion of the code as well as the documentation presented here is the work of the original authors for which no credit is claimed.**
+Consequently a **significant proportion of the code as well as the documentation presented here is work of the original authors for which no credit is claimed.**
 
 ## Pre-trained model
 
